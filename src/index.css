@@ -20,3 +20,106 @@ body {
   text-shadow: 0 8px 32px rgba(0,0,0,.45);
   letter-spacing: 0.8px;
 }
+.game {
+  display: grid;
+  gap: 20px;
+  place-items: center;
+  text-align: center;
+  padding: 24px;
+}
+
+.subtitle {
+  margin: 0;
+  color: #eafcff;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-shadow: 0 8px 32px rgba(0,0,0,.45);
+}
+
+/* Smaller image than before */
+.image-wrap {
+  position: relative;
+  width: 100%;
+  max-width: min(100vw, 620px);  
+}
+.card-img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 16px;
+  box-shadow: 0 12px 36px rgba(0,0,0,.35);
+}
+
+/* Arrow buttons on the image edges */
+.arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 64px;
+  height: 64px;
+  border-radius: 999px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+    linear-gradient(120deg, #7a5cff, #00e5ff) border-box;
+  color: #eafcff;
+  font-weight: 900;
+  cursor: pointer;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+}
+.arrow-btn.left  { left: -122px; }
+.arrow-btn.right { right: -122px; }
+@media (max-width: 520px) {
+  .arrow-btn.left  { left: -6px; }
+  .arrow-btn.right { right: -6px; }
+}
+
+/* Bigger choice buttons */
+.choices {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.choice-btn {
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-weight: 800;
+  letter-spacing: .3px;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+    linear-gradient(120deg, #00e5ff, #7a5cff) border-box;
+  color: #a0ffff;
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.30);
+  cursor: pointer;
+  transition: transform .2s ease, box-shadow .2s ease, opacity .2s ease;
+}
+.choice-btn.big {
+  font-size: 30px;         /* ↑ bigger text */
+  padding: 26px 46px;      /* ↑ bigger hit area */
+  min-width: 170px;        /* ↑ wider pill */
+}
+.choice-btn:hover { transform: translateY(-1px); box-shadow: 0 10px 30px rgba(0,0,0,.45); }
+.choice-btn:disabled { opacity: .6; cursor: not-allowed; }
+
+.feedback {
+  margin: 4px 0 0;
+  color: #ffffff;
+  font-size: 30px;
+  font-weight: 700;
+  text-shadow: 0 8px 32px rgba(0,0,0,.45);
+}
+
+.game-cta { margin-top: 4px; }
+.small-btn {
+  padding: 10px 18px;
+  border-radius: 999px;
+  font-weight: 700;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+    linear-gradient(120deg, #7a5cff, #00e5ff) border-box;
+  color: #eafcff;
+  cursor: pointer;
+}
