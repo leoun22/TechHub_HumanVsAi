@@ -3,26 +3,39 @@ export type Answer = "Human" | "Ai";
 
 export type Round = {
   src: string;
-  answer: Answer; 
+  answer: Answer;
+  fit?: "frame" | "raw"; // raw = keep original dimensions (no fixed aspect)
 };
 
 type ResultsProps = {
   rounds: Round[];
   choices: (Answer | null)[];
-  onRestart: () => void;
-  bg: string; 
+  /** New: go back to the Start page (show START button) */
+  onBackToStart?: () => void;
+  bg: string;
 };
 
-export default function Results({ rounds, choices, onRestart, bg }: ResultsProps) {
-  const score = rounds.reduce((s, r, i) => s + (choices[i] === r.answer ? 1 : 0), 0);
+export default function Results({
+  rounds,
+  choices,
+  onBackToStart,
+  bg,
+}: ResultsProps) {
+  const score = rounds.reduce(
+    (s, r, i) => s + (choices[i] === r.answer ? 1 : 0),
+    0
+  );
 
-  
   const WIN_THRESHOLD = 4;
   const status = score >= WIN_THRESHOLD ? "WIN" : "LOSE";
 
+  const handlePlayAgain = () => {
+    // Prefer going to Start page if provided
+    if (onBackToStart) onBackToStart();
+  };
+
   return (
     <div className="results-screen">
-    
       <img className="bg" src={bg} alt="" />
 
       <div className="results">
@@ -33,12 +46,14 @@ export default function Results({ rounds, choices, onRestart, bg }: ResultsProps
             <div className={`status ${status === "WIN" ? "win" : "lose"}`}>
               {status}
             </div>
-            
+
             <div className="score">
-              <b>{score}</b><span>/</span><span>{rounds.length}</span>
+              <b>{score}</b>
+              <span>/</span>
+              <span>{rounds.length}</span>
             </div>
-            
-            <button className="btn primary" onClick={onRestart}>
+
+            <button className="btn primary" onClick={handlePlayAgain}>
               🎮 Play Again
             </button>
           </div>
