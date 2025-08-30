@@ -10,7 +10,7 @@ import Start from "./components/start";
 import Results, { type Answer, type Round } from "./components/Results";
 
 const ROUNDS: Round[] = [
-  { src: Ai1, answer: "Ai" },
+  { src: Ai1, answer: "Ai" }, // first: keep original dims
   { src: human1, answer: "Human" },
   { src: human2, answer: "Human" },
   { src: Ai2, answer: "Ai" },
@@ -18,14 +18,18 @@ const ROUNDS: Round[] = [
   { src: Ai3, answer: "Ai" },
 ];
 
+const ADVANCE_DELAY = 1000; // 1s
+
 export default function App() {
   const [started, setStarted] = useState(false);
   const [idx, setIdx] = useState(0);
   const [choice, setChoice] = useState<Answer | null>(null);
   const [feedback, setFeedback] = useState<string | null>(null);
-  const [choices, setChoices] = useState<(Answer | null)[]>(Array(ROUNDS.length).fill(null));
+  const [choices, setChoices] = useState<(Answer | null)[]>(
+    Array(ROUNDS.length).fill(null)
+  ); // تخزين إجابات اللاعب
   const [showResults, setShowResults] = useState(false);
-  const [playerNumber, setPlayerNumber] = useState(1);
+  const [playerNumber, setPlayerNumber] = useState(1); // إضافة رقم اللاعب فقط
 
   const onStart = () => {
     setStarted(true);
@@ -36,7 +40,7 @@ export default function App() {
     setShowResults(false);
   };
 
-  // دالة لحفظ النتيجة وإرسالها إلى الشيت
+  // دالة لحفظ النتيجة وإرسالها إلى قوقل شيت
   const saveGameResult = (playerNum: number, finalResult: string, errorRate: number) => {
     const data = { 
       playerNumber: playerNum, 
@@ -53,45 +57,39 @@ export default function App() {
       },
       body: JSON.stringify(data),
     })
-    .then(response => response.json())
-    .then(data => console.log('Success:', data))
+    .then(() => console.log('Success'))
     .catch((error) => console.error('Error:', error));
   };
 
   const choose = (c: Answer) => {
     setChoice(c);
-    
-    const updatedChoices = [...choices];
-    updatedChoices[idx] = c;
-    setChoices(updatedChoices);
+    // خزّن إجابة هذه الجولة
+    setChoices((prev) => {
+      const next = [...prev];
+      next[idx] = c;
+      return next;
+    });
 
     // إذا كانت آخر جولة، اعرض النتائج
     if (idx === ROUNDS.length - 1) {
-      setTimeout(() => setShowResults(true), 500);
-
-
+      // حساب النتيجة وإرسالها للشيت
+      const updatedChoices = [...choices];
+      updatedChoices[idx] = c;
       const correctAnswers = updatedChoices.filter((choice, i) => choice === ROUNDS[i].answer).length;
       const errorRate = (ROUNDS.length - correctAnswers) / ROUNDS.length;
       const finalResult = correctAnswers >= 4 ? "Win" : "Lose";
-
-      // إرسال النتيجة ونسبة الخطأ
+      
       saveGameResult(playerNumber, finalResult, errorRate);
       setPlayerNumber(prev => prev + 1);
+      
+      setTimeout(() => setShowResults(true), 500);
+    } else {
+      setTimeout(() => {
+        setIdx((i) => i + 1);
+        setChoice(null);
+        setFeedback(null);
+      }, ADVANCE_DELAY);
     }
-  };
-
-  const next = () => {
-    const n = (idx + 1) % ROUNDS.length;
-    setIdx(n);
-    setChoice(null);
-    setFeedback(null);
-  };
-
-  const prev = () => {
-    const p = (idx - 1 + ROUNDS.length) % ROUNDS.length;
-    setIdx(p);
-    setChoice(null);
-    setFeedback(null);
   };
 
   if (showResults) {
@@ -99,7 +97,14 @@ export default function App() {
       <Results
         rounds={ROUNDS}
         choices={choices}
-        onRestart={onStart}
+        onRestart={() => {
+          setShowResults(false);
+          setStarted(false);
+          setIdx(0);
+          setChoice(null);
+          setFeedback(null);
+          setChoices(Array(ROUNDS.length).fill(null));
+        }}
         bg={bg}
       />
     );
@@ -136,20 +141,6 @@ export default function App() {
 
           <div className="image-wrap">
             <img src={ROUNDS[idx].src} alt="mystery" className="card-img" />
-            <button
-              className="arrow-btn left"
-              onClick={prev}
-              aria-label="Previous"
-            >
-              ←
-            </button>
-            <button
-              className="arrow-btn right"
-              onClick={next}
-              aria-label="Next"
-            >
-              →
-            </button>
           </div>
 
           <div className="choices">
