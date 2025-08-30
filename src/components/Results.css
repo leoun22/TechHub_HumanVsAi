@@ -1,0 +1,380 @@
+/* صفحة النتائج - تصميم يشابه صفحة البداية */
+
+.results-screen {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #0b0f1a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* خلفية الصفحة */
+.results-screen .bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.2;
+  z-index: 0;
+}
+
+
+.results-screen::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, rgba(11, 15, 26, 0.85), rgba(11, 15, 26, 0.65));
+  z-index: 1;
+}
+
+
+.results {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+
+.results-header {
+  text-align: center;
+  margin-bottom: 40px;
+  animation: fadeInUp 0.8s ease-out;
+}
+
+.results-title {
+  font-size: 48px;
+  font-weight: 700;
+  color: #a0ffff;
+  text-shadow: 0 2px 12px rgba(160, 255, 255, 0.3);
+  margin-bottom: 30px;
+  letter-spacing: 1px;
+}
+
+
+.results-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+
+/* حالة الفوز/الخسارة */
+.status {
+  padding: 20px 40px;
+  border-radius: 999px;
+  font-size: 24px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 2px solid transparent;
+  text-shadow: 0 2px 8px rgba(255, 255, 255, 0.2);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  min-width: 120px;
+  text-align: center;
+}
+
+.status.win {
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, #00ff88, #00e5ff) border-box;
+  color: #a0ffaa;
+  box-shadow: 0 6px 24px rgba(0, 255, 136, 0.25);
+}
+
+.status.lose {
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, #ff6b6b, #ff8e8e) border-box;
+  color: #ffa0a0;
+  box-shadow: 0 6px 24px rgba(255, 107, 107, 0.25);
+}
+
+.status:hover {
+  transform: translateY(-2px);
+}
+
+.status.win:hover {
+  box-shadow: 0 10px 30px rgba(0, 255, 136, 0.35);
+}
+
+.status.lose:hover {
+  box-shadow: 0 10px 30px rgba(255, 107, 107, 0.35);
+}
+
+/* النتيجة الرقمية */
+.score {
+  padding: 20px 30px;
+  border-radius: 20px;
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, #00e5ff, #7a5cff) border-box;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
+}
+
+.score b {
+  font-size: 32px;
+  font-weight: 700;
+  color: #a0ffff;
+  text-shadow: 0 2px 8px rgba(160, 255, 255, 0.3);
+}
+
+.score span {
+  font-size: 24px;
+  color: #7a9cff;
+}
+
+
+.btn.primary {
+  padding: 16px 42px;
+  border-radius: 999px;
+  font-family: inherit;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  border: 1px solid transparent;
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, #00e5ff, #7a5cff) border-box;
+  color: #a0ffff;
+  text-shadow: 0 2px 12px rgba(255, 255, 255, 0.30);
+  cursor: pointer;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn.primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+}
+
+.btn.primary:active {
+  transform: translateY(1px) scale(0.98);
+}
+
+.btn.primary:focus-visible {
+  outline: 3px solid rgba(122, 92, 255, 0.7);
+  outline-offset: 3px;
+}
+
+
+.results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+  animation: fadeInUp 1s ease-out 0.3s both;
+}
+
+/* بطاقة كل جولة */
+.card {
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, rgba(0, 229, 255, 0.3), rgba(122, 92, 255, 0.3)) border-box;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  animation: slideInUp 0.6s ease-out both;
+}
+
+.card:nth-child(1) { animation-delay: 0.1s; }
+.card:nth-child(2) { animation-delay: 0.2s; }
+.card:nth-child(3) { animation-delay: 0.3s; }
+.card:nth-child(4) { animation-delay: 0.4s; }
+.card:nth-child(5) { animation-delay: 0.5s; }
+.card:nth-child(6) { animation-delay: 0.6s; }
+
+.card:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* بطاقة صحيحة */
+.card.ok {
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, rgba(0, 255, 136, 0.4), rgba(0, 229, 255, 0.4)) border-box;
+}
+
+.card.ok:hover {
+  box-shadow: 0 12px 40px rgba(0, 255, 136, 0.3);
+}
+
+/* بطاقة خاطئة */
+.card.ng {
+  background: linear-gradient(#0b0f1a, #0b0f1a) padding-box,
+              linear-gradient(120deg, rgba(255, 107, 107, 0.4), rgba(255, 142, 142, 0.4)) border-box;
+}
+
+.card.ng:hover {
+  box-shadow: 0 12px 40px rgba(255, 107, 107, 0.3);
+}
+
+/* صورة البطاقة */
+.thumb {
+  position: relative;
+  height: 200px;
+  overflow: hidden;
+}
+
+.thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.card:hover .thumb img {
+  transform: scale(1.1);
+}
+
+/*  النتيجة */
+.badge {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  padding: 8px 16px;
+  border-radius: 999px;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  border: 1px solid transparent;
+}
+
+.badge.ok {
+  background: linear-gradient(rgba(11, 15, 26, 0.9), rgba(11, 15, 26, 0.9)) padding-box,
+              linear-gradient(120deg, #00ff88, #00e5ff) border-box;
+  color: #a0ffaa;
+  box-shadow: 0 4px 16px rgba(0, 255, 136, 0.3);
+}
+
+.badge.ng {
+  background: linear-gradient(rgba(11, 15, 26, 0.9), rgba(11, 15, 26, 0.9)) padding-box,
+              linear-gradient(120deg, #ff6b6b, #ff8e8e) border-box;
+  color: #ffa0a0;
+  box-shadow: 0 4px 16px rgba(255, 107, 107, 0.3);
+}
+
+/* معلومات البطاقة */
+.info {
+  padding: 20px;
+  background: rgba(11, 15, 26, 0.6);
+  backdrop-filter: blur(10px);
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.row:last-child {
+  margin-bottom: 0;
+}
+
+.k {
+  font-size: 14px;
+  color: #7a9cff;
+  font-weight: 500;
+}
+
+.v {
+  font-size: 14px;
+  font-weight: 700;
+  padding: 6px 12px;
+  border-radius: 20px;
+  border: 1px solid transparent;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.v.ok {
+  background: linear-gradient(rgba(11, 15, 26, 0.8), rgba(11, 15, 26, 0.8)) padding-box,
+              linear-gradient(120deg, rgba(0, 255, 136, 0.3), rgba(0, 229, 255, 0.3)) border-box;
+  color: #a0ffaa;
+}
+
+.v.ng {
+  background: linear-gradient(rgba(11, 15, 26, 0.8), rgba(11, 15, 26, 0.8)) padding-box,
+              linear-gradient(120deg, rgba(255, 107, 107, 0.3), rgba(255, 142, 142, 0.3)) border-box;
+  color: #ffa0a0;
+}
+
+.v:not(.ok):not(.ng) {
+  background: linear-gradient(rgba(11, 15, 26, 0.8), rgba(11, 15, 26, 0.8)) padding-box,
+              linear-gradient(120deg, rgba(122, 92, 255, 0.3), rgba(0, 229, 255, 0.3)) border-box;
+  color: #a0ffff;
+}
+
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(60px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 768px) {
+  .results-title {
+    font-size: 36px;
+  }
+  
+  .results-row {
+    flex-direction: column;
+    gap: 20px;
+  }
+  
+  .status {
+    font-size: 20px;
+    padding: 16px 32px;
+  }
+  
+  .score b {
+    font-size: 28px;
+  }
+  
+  .btn.primary {
+    font-size: 18px;
+    padding: 14px 36px;
+  }
+  
+  .results-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+}
