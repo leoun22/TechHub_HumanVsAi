@@ -10,7 +10,7 @@ import Start from "./components/start";
 import Results, { type Answer, type Round } from "./components/Results";
 
 const ROUNDS: Round[] = [
-  { src: Ai1, answer: "Ai" }, // first: keep original dims
+  { src: Ai1, answer: "Ai" },
   { src: human1, answer: "Human" },
   { src: human2, answer: "Human" },
   { src: Ai2, answer: "Ai" },
@@ -27,8 +27,9 @@ export default function App() {
   const [feedback, setFeedback] = useState<string | null>(null);
   const [choices, setChoices] = useState<(Answer | null)[]>(
     Array(ROUNDS.length).fill(null)
-  ); // تخزين إجابات اللاعب
+  );
   const [showResults, setShowResults] = useState(false);
+  const [playerNumber, setPlayerNumber] = useState(1); // track player #
 
   const onStart = () => {
     setStarted(true);
@@ -39,17 +40,51 @@ export default function App() {
     setShowResults(false);
   };
 
+  // Send final result to Google Sheets
+  const saveGameResult = (
+    playerNum: number,
+    finalResult: string,
+    errorRate: number
+  ) => {
+    const data = { playerNumber: playerNum, result: finalResult, errorRate };
+    console.log("Sending data:", data);
+
+    fetch(
+      "https://script.google.com/macros/s/AKfycbwh_yT1RmaWwmn7eQNdHDoUj1n2o008_6FXo4SFH-ZwhPeluvnppKJzf8pHrSScMmhiHA/exec",
+      {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      }
+    )
+      .then(() => console.log("Success"))
+      .catch((error) => console.error("Error:", error));
+  };
+
   const choose = (c: Answer) => {
     setChoice(c);
-    // خزّن إجابة هذه الجولة
+
+    // store answer for this round
     setChoices((prev) => {
       const next = [...prev];
       next[idx] = c;
       return next;
     });
 
-    // إذا كانت آخر جولة، اعرض النتائج
     if (idx === ROUNDS.length - 1) {
+      // compute final score + send to sheet
+      const updatedChoices = [...choices];
+      updatedChoices[idx] = c;
+      const correct = updatedChoices.filter(
+        (ans, i) => ans === ROUNDS[i].answer
+      ).length;
+      const errorRate = (ROUNDS.length - correct) / ROUNDS.length;
+      const finalResult = correct >= 4 ? "Win" : "Lose";
+
+      saveGameResult(playerNumber, finalResult, errorRate);
+      setPlayerNumber((n) => n + 1);
+
       setTimeout(() => setShowResults(true), 500);
     } else {
       setTimeout(() => {
@@ -66,9 +101,10 @@ export default function App() {
         rounds={ROUNDS}
         choices={choices}
         onBackToStart={() => {
+          // go back to Start page
           setShowResults(false);
           setStarted(false);
-
+          // reset round state (optional, you’ll reset again onStart)
           setIdx(0);
           setChoice(null);
           setFeedback(null);
